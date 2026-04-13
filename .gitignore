@@ -1,3 +1,32 @@
+# --- PRIVATE / SENSITIVE ---
+.env
+.venv/
+venv/
+secrets.json
+
+# --- LOCAL DATA / GENERATED OUTPUT ---
+data/
+logs/
+audit_results/
+benchmarks/
+
+# sigma2i outputs
+*.csv
+*.png
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# private / unfinished work
+archive_unzipped/
+Archive.zip
+mbl/
+sigma2i_mbl_probe.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
