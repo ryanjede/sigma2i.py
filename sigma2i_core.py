@@ -649,8 +649,8 @@ def demo_tfim(
             axes[1].set_title(f"Heterogeneity map at h*={result.peak_param:.3f}", fontsize=11)
             axes[1].grid(alpha=0.25)
             plt.tight_layout()
-            plt.savefig("sigma2i_demo.png", dpi=120, bbox_inches="tight")
-            print("\nPlot saved to sigma2i_demo.png")
+            plt.savefig("sigma2i_core.png", dpi=120, bbox_inches="tight")
+            print("\nPlot saved to sigma2i_core.png")
         except ImportError:
             print("matplotlib not available — skipping plot")
 
