@@ -124,11 +124,14 @@ This will:
 
 ### 2. Run a determinant scan
 
-For larger TFIM scans:
-
+Show available command-line options
 ```bash
-# Edit N and h_range at the bottom of the script, then:
-python3 tfim_jw_determinant_sigma2i_obc.py
+python3 tfim_jw_determinant_sigma2i_obc.py -h
+```
+
+Example scan
+```bash
+python3 tfim_jw_determinant_sigma2i_obc.py -n 50 --h-min 0.90 --h-max 1.05 --h-step 0.001
 ```
 
 ### 3. Run a Pfaffian scan
