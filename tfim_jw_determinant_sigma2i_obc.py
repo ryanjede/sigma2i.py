@@ -1,30 +1,25 @@
 #!/usr/bin/env python3
-"""
-tfim_jw_determinant_sigma2i_obc.py
-
-Fast Jordan-Wigner / Bogoliubov free-fermion computation of sigma^2_I
-for the transverse-field Ising model with open boundary conditions.
-
-Uses the tridiagonal BdG eigenproblem and determinant-based spin
-correlator reconstruction. Practical for system sizes n <= 800+.
-
-Verified against exact diagonalisation (sigma2i_core.py) to machine
-precision (|delta sigma^2_I| < 5e-15) at n = 4, 6, 8, 10.
-
-Usage
------
-Edit the configuration in the __main__ block below, then run:
-
-    python3 tfim_jw_determinant_sigma2i_obc.py
-
-Author: Ryan J. Ede
-License: MIT
-"""
 import numpy as np
 import scipy.linalg as la
 from itertools import combinations
 import time
+import argparse
 
+"""
+Usage
+-----
+Example:
+
+    python3 tfim_jw_determinant_sigma2i_obc.py -n 500 --h-min 0.90 --h-max 1.05 --h-step 0.001
+
+Optional flags:
+
+    --print-each-point
+    --log-base {2,e}
+    --max-local-peaks 5
+    --min-sep-h 0.01
+    --show-top-raw-points
+"""
 
 # ============================================================
 # CORE TFIM / JW / SPIN-MI ROUTINES
@@ -237,60 +232,122 @@ def print_summary(
         for h, s2 in top_k_points(results, k=top_raw_k):
             print(f"h: {h:.4f} | Sigma2_I: {s2:.8e}")
 
+def build_h_range(h_min: float, h_max: float, h_step: float) -> np.ndarray:
+    if h_step <= 0:
+        raise ValueError("h_step must be positive")
+    if h_max < h_min:
+        raise ValueError("h_max must be >= h_min")
+
+    # Include endpoint
+    n_steps = int(round((h_max - h_min) / h_step))
+    return h_min + np.arange(n_steps + 1, dtype=float) * h_step
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description=(
+            "Determinant-based Jordan-Wigner scan of sigma^2_I for the "
+            "open-boundary transverse-field Ising model."
+        )
+    )
+
+    parser.add_argument(
+        "-n", "--n",
+        type=int,
+        nargs="+",
+        default=[50],
+        help="One or more system sizes, e.g. -n 4 5 6 8"
+    )
+    parser.add_argument(
+        "--h-min",
+        type=float,
+        default=0.90,
+        help="Minimum h value (default: 0.90)"
+    )
+    parser.add_argument(
+        "--h-max",
+        type=float,
+        default=1.05,
+        help="Maximum h value (default: 1.05)"
+    )
+    parser.add_argument(
+        "--h-step",
+        type=float,
+        default=0.001,
+        help="Step size in h (default: 0.001)"
+    )
+    parser.add_argument(
+        "--log-base",
+        choices=["2", "e"],
+        default="2",
+        help="Entropy log base: 2 or e (default: 2)"
+    )
+    parser.add_argument(
+        "--print-each-point",
+        action="store_true",
+        help="Print sigma^2_I at every scan point"
+    )
+    parser.add_argument(
+        "--max-local-peaks",
+        type=int,
+        default=5,
+        help="Maximum number of local maxima to report (default: 5)"
+    )
+    parser.add_argument(
+        "--min-sep-h",
+        type=float,
+        default=0.01,
+        help="Minimum h separation between reported local peaks (default: 0.01)"
+    )
+    parser.add_argument(
+        "--show-top-raw-points",
+        action="store_true",
+        help="Show top raw grid points in the summary"
+    )
+    parser.add_argument(
+        "--top-raw-k",
+        type=int,
+        default=5,
+        help="Number of top raw points to show if enabled (default: 5)"
+    )
+
+    return parser.parse_args()
+
 
 # ============================================================
 # MAIN
 # ============================================================
 
+def main():
+    args = parse_args()
+    h_range = build_h_range(args.h_min, args.h_max, args.h_step)
+
+    for n in args.n:
+        print(f"--- TFIM JW determinant scan (N={n}) ---")
+        start = time.time()
+
+        results = run_scan(
+            n=n,
+            h_values=h_range,
+            log_base=args.log_base,
+            print_each_point=args.print_each_point,
+        )
+
+        elapsed = time.time() - start
+
+        print_summary(
+            n=n,
+            h_values=h_range,
+            results=results,
+            elapsed=elapsed,
+            max_local_peaks=args.max_local_peaks,
+            min_sep_h=args.min_sep_h,
+            show_top_raw_points=args.show_top_raw_points,
+            top_raw_k=args.top_raw_k,
+        )
+
+        print()
+
+
 if __name__ == "__main__":
-    # ========================================================
-    # Configuration — edit these for your scan
-    # ========================================================
-
-
-    N = 500
-
-    # Pick ONE scan range:
-
-    # Broad / coarse
-    # h_range = np.arange(0.1, 3.0 + 0.01, 0.01)
-
-    # Fine around crest
-    h_range = np.arange(0.90, 1.05 + 0.001, 0.001)
-
-    # Example higher-field large-N scan
-    # h_range = np.arange(0.940, 0.981 + 0.0005, 0.0005)
-
-    PRINT_EACH_POINT = True
-
-    LOG_BASE = "2"            # "2" or "e"
-    MAX_LOCAL_PEAKS = 5
-    MIN_SEP_H = 0.01          # increase to 0.02 if too many nearby maxima appear
-
-    SHOW_TOP_RAW_POINTS = False
-    TOP_RAW_K = 5
-
-    # ========================================================
-
-        print(f"--- sigma2i determinant scan (N={N}) ---")
-    start = time.time()
-
-    results = run_scan(
-        n=N,
-        h_values=h_range,
-        log_base=LOG_BASE,
-        print_each_point=PRINT_EACH_POINT,
-    )
-
-    elapsed = time.time() - start
-
-    print_summary(
-        n=N,
-        h_values=h_range,
-        results=results,
-        elapsed=elapsed,
-        max_local_peaks=MAX_LOCAL_PEAKS,
-        min_sep_h=MIN_SEP_H,
-        show_top_raw_points=SHOW_TOP_RAW_POINTS,
-        top_raw_k=TOP_RAW_K,
-    )
+    main()
