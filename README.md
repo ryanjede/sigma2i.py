@@ -38,7 +38,8 @@ Practical for n ≤ 800+.
 
 Jordan–Wigner free-fermion implementation using Pfaffian
 reconstruction of spin correlators via Majorana correlation
-matrices.
+matrices. This was the first implementation to reveal the
+finite-size regime structure of σ²_I.
 
 ## Validation
 
