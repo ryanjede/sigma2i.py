@@ -17,20 +17,20 @@ Usage
 
     # From a density matrix (full system, shape 2^n x 2^n)
     rho = ...
-    result = sigma2i.from_density_matrix(rho, n_qubits=8)
+    result = sigma2i_core.from_density_matrix(rho, n_qubits=8)
     print(result.sigma2, result.mean_mi, result.hot_pairs)
 
     # From a state vector (shape 2^n)
     psi = ...
-    result = sigma2i.from_state_vector(psi, n_qubits=8)
+    result = sigma2i_core.from_state_vector(psi, n_qubits=8)
 
     # From tomography data (list of 2-qubit reduced density matrices)
     # rdms[(i,j)] = 4x4 density matrix for qubits i<j
-    result = sigma2i.from_rdms(rdms, n_qubits=8)
+    result = sigma2i_core.from_rdms(rdms, n_qubits=8)
 
     # Scan over a Hamiltonian parameter (e.g. transverse field)
     h_values = np.linspace(0.3, 1.8, 50)
-    scan = sigma2i.scan(hamiltonian_fn, h_values, n_qubits=8)
+    scan = sigma2i_core.scan(hamiltonian_fn, h_values, n_qubits=8)
     scan.plot()
 
 Requirements
