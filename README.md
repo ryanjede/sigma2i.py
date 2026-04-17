@@ -65,7 +65,6 @@ Includes:
 
 - Coarse-to-fine peak search
 - Variance decomposition (law of total variance)
-- CSV and PNG output
 
 Best for:
 
