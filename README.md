@@ -124,6 +124,20 @@ This will:
 
 ### 2. Run a determinant scan
 
+Without any flags, the script runs with its default settings:
+
+```bash
+python3 tfim_jw_determinant_sigma2i_obc.py
+```
+
+Default settings:
+
+* n = 50
+* h-min = 0.90
+* h-max = 1.05
+* h-step = 0.001
+* log-base = 2
+
 Show available command-line options
 ```bash
 python3 tfim_jw_determinant_sigma2i_obc.py -h
