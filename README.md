@@ -1,101 +1,95 @@
 # σ²_I: Structural Observable for Finite Quantum Systems
 
-Reproducible Python implementation of a basis-invariant, partition-free
-structural observable for finite quantum systems.
+Reproducible Python implementation of **σ²_I**, a basis-invariant, partition-free structural observable for finite quantum systems.
 
-σ²_I = Var(I(Aᵢ:Aⱼ)) — the variance of pairwise mutual information
-over all subsystem pairs — detects *where* correlations live in finite
-quantum systems, not merely *how much* correlation exists.
+**σ²_I = Var(I(Aᵢ:Aⱼ))**
 
-Companion code for:
+The variance of pairwise mutual information over all subsystem pairs. The observable detects **where correlations live**, not merely **how much** correlation exists.
 
-> R. J. Ede, “σ²_I: A Second-Moment Functional of Pairwise
-> Correlations as a Structural Observable in Finite Quantum Systems,”
-> submitted to Physical Review Letters (2026).
+This repository accompanies:
 
-## Scripts
+> R. J. Ede, "σ²_I: A Second-Moment Functional of Pairwise Correlations as a Structural Observable in Finite Quantum Systems" (2026 manuscript).
 
-### `sigma2i_core.py` — Reference implementation (ED)
+---
 
-Core routines: exact diagonalisation of the transverse-field Ising
-model (TFIM), pairwise MI computation, and σ²_I evaluation.
-Suitable for small systems (n ≤ 18) and as ground-truth reference
-for validating other methods.
+## What this repository contains
 
-### `tfim_jw_determinant_sigma2i_obc.py` — Scalable scan path
+This repo provides three main paths for computing **σ²_I** in the transverse-field Ising model (TFIM):
 
-Fast Jordan–Wigner / Bogoliubov free-fermion implementation using
-the tridiagonal eigenproblem. Includes:
+- A **small-system exact diagonalisation** reference implementation
+- A **Jordan–Wigner + Pfaffian** implementation for validation and moderate sizes
+- A **Jordan–Wigner determinant-based** implementation for larger scans
 
-- Two-stage coarse→fine peak search
-- Variance decomposition (law of total variance) for mechanistic
-  analysis of the finite-size crossover
-- CSV and PNG output
+The intent is to provide:
 
-Practical for n ≤ 800+.
+- A clear reference path
+- Overlapping methods for cross-checking
+- A scalable route for finite-size studies
+
+---
+
+## Repository map
+
+### `sigma2i_core.py` — Reference implementation (exact diagonalisation)
+
+Core routines for:
+
+- Exact diagonalisation of the TFIM
+- Pairwise mutual information computation
+- σ²_I evaluation from state vectors, density matrices, or precomputed two-site reduced density matrices
+
+Best for:
+
+- Small systems (n ≤ 18 on standard hardware)
+- Ground-truth reference calculations
+- Learning the API
+- Running the built-in demo
 
 ### `tfim_jw_pfaffian_sigma2i_obc.py` — Pfaffian validation path
 
-Jordan–Wigner free-fermion implementation using Pfaffian
-reconstruction of spin correlators via Majorana correlation
-matrices. This was the first implementation to reveal the
-finite-size regime structure of σ²_I.
+Jordan–Wigner free-fermion implementation using Pfaffian reconstruction of spin correlators via Majorana correlation matrices.
 
-## Validation
+Best for:
 
-Both JW implementations are verified against exact diagonalisation
-to machine precision (|Δσ²_I| < 5 × 10⁻¹⁵) at n = 4, 6, 8, 10.
+- Moderate system sizes
+- Cross-checking the determinant path
+- Validating the spin-correlator reconstruction pipeline
 
-|Method     |Trusted range|Use case                       |
-|-----------|-------------|-------------------------------|
-|ED (core)  |n ≤ 18       |Ground truth, any Hamiltonian  |
-|Pfaffian   |n ≤ 65       |Cross-check of determinant path|
-|Determinant|n ≤ 800+     |Large-n scaling scans          |
+This was the first implementation used to reveal the finite-size regime structure of σ²_I.
 
-## Quick start
+### `tfim_jw_determinant_sigma2i_obc.py` — Scalable scan path
 
-### Install dependencies
+Fast Jordan–Wigner / Bogoliubov free-fermion implementation using the tridiagonal eigenproblem and determinant-based correlator reconstruction.
 
-```bash
-pip install numpy scipy matplotlib
-```
+Includes:
 
-### Run a determinant scan (large n)
+- Coarse-to-fine peak search
+- Variance decomposition (law of total variance)
+- CSV and PNG output
 
-```bash
-# Edit N and h_range at bottom of script, then:
-python3 tfim_jw_determinant_sigma2i_obc.py
-```
+Best for:
 
-### Run a Pfaffian scan (moderate n)
+- Larger TFIM scans
+- Finite-size scaling studies
+- Mechanistic analysis of the crossover structure
 
-```bash
-# Edit N and h_range at bottom of script, then:
-python3 tfim_jw_pfaffian_sigma2i_obc.py
-```
+---
 
-### Exact diagonalisation (`n <= 18`)
+## Validation and scope
 
-## Advanced usage
+The three paths serve different roles:
 
-These functions are for users who already have quantum-state data from another script, simulator, or experiment.
+- **ED (core):** Ground-truth reference implementation for small systems and arbitrary Hamiltonians.
+- **Pfaffian path:** Main validation and cross-check path. Validated against exact diagonalisation at n = 4, 6, 8, 10. Explicitly validated to n ≤ 65, with exploratory use into the low-70s.
+- **Determinant path:** Large-n scan path. Cross-checked against the Pfaffian/JW path in the overlap regime and used for extended scaling and crossover analysis.
 
-- `from_state_vector(...)`: use this if you already have a pure-state wavefunction `psi`
-- `from_density_matrix(...)`: use this if you already have a full density matrix `rho`
-- `from_rdms(...)`: use this if you already have precomputed two-site reduced density matrices `rdms`
+| Method      | Role                          | Range / status                                      |
+|-------------|-------------------------------|-----------------------------------------------------|
+| ED (core)   | Ground truth, any Hamiltonian | Practical for small n (n ≤ 18)                      |
+| Pfaffian    | Validation / overlap check    | Validated to n ≤ 65; exploratory into low-70s       |
+| Determinant | Large-n scan path             | Used for extended scaling and crossover analysis    |
 
-If you are unsure what these objects are, skip this section and use the built-in TFIM demo instead:
-
-```bash
-python3 sigma2i_core.py
-```
-
-### Reproduce a headline result
-
-The σ²_I peak for the TFIM with open boundary conditions occurs at
-h* ≈ 0.925 (n = 14), below the critical point h_c = 1.0. Run the
-determinant script with n = 14 and h_range covering [0.85, 1.05]
-to verify.
+---
 
 ## Requirements
 
@@ -103,6 +97,162 @@ to verify.
 - NumPy
 - SciPy
 - Matplotlib (optional, for plots)
+
+Install dependencies with:
+
+```bash
+pip install numpy scipy matplotlib
+```
+
+---
+
+## Quick start
+
+### 1. Run the built-in demo
+
+The easiest way to confirm the code is working:
+
+```bash
+python3 sigma2i_core.py
+```
+
+This will:
+
+- Run the built-in TFIM demo for n = 8
+- Scan over the transverse field
+- Print the peak location and summary statistics
+- Save a plot as `sigma2i_demo.png`
+
+### 2. Run a determinant scan
+
+For larger TFIM scans:
+
+```bash
+# Edit N and h_range at the bottom of the script, then:
+python3 tfim_jw_determinant_sigma2i_obc.py
+```
+
+### 3. Run a Pfaffian scan
+
+For moderate-size validation and overlap checks:
+
+```bash
+# Edit N and h_range at the bottom of the script, then:
+python3 tfim_jw_pfaffian_sigma2i_obc.py
+```
+
+---
+
+## Interactive demo
+
+To inspect the result in Python directly:
+
+```python
+from sigma2i_core import demo_tfim
+
+scan = demo_tfim(n=8)
+peak = scan.results[scan.peak_idx]
+
+print("h* =", scan.peak_param)
+print("sigma2 =", peak.sigma2)
+print("mean_mi =", peak.mean_mi)
+print("contrast_ratio =", peak.contrast_ratio)
+print("hot_pairs =", peak.hot_pairs[:3])
+print("cold_pairs =", peak.cold_pairs[:3])
+```
+
+Note: `demo_tfim(...)` returns a scan result. The peak-state result is stored in `scan.results[scan.peak_idx]`.
+
+---
+
+## Advanced usage
+
+These functions are for users who already have quantum-state data from another script, simulator, or experiment. If you are unsure what `psi`, `rho`, or `rdms` are, use the built-in demo instead.
+
+### From a state vector
+
+```python
+from sigma2i_core import from_state_vector
+
+res = from_state_vector(psi, n_qubits=8)
+print(res.sigma2, res.mean_mi, res.contrast_ratio)
+```
+
+### From a density matrix
+
+```python
+from sigma2i_core import from_density_matrix
+
+res = from_density_matrix(rho, n_qubits=8)
+print(res.sigma2, res.mean_mi, res.contrast_ratio)
+```
+
+### From precomputed two-site reduced density matrices
+
+```python
+from sigma2i_core import from_rdms
+
+# rdms[(i, j)] = 4x4 density matrix for qubits i < j
+res = from_rdms(rdms, n_qubits=8)
+print(res.sigma2, res.mean_mi, res.contrast_ratio)
+```
+
+---
+
+## Output objects
+
+### `Sigma2IResult`
+
+Returned by `from_state_vector(...)`, `from_density_matrix(...)`, and `from_rdms(...)`.
+
+Contains: `sigma2`, `mean_mi`, `mis`, `pairs`, `hot_pairs`, `cold_pairs`, `contrast_ratio`.
+
+### `ScanResult`
+
+Returned by `demo_tfim(...)` and `scan(...)`.
+
+Contains: `params`, `sigma2`, `mean_mi`, `peak_param`, `peak_idx`, `results`.
+
+To extract the peak-state result from a scan:
+
+```python
+peak = scan.results[scan.peak_idx]
+```
+
+---
+
+## Recommended workflow
+
+1. Run `python3 sigma2i_core.py`
+2. Inspect the interactive demo if needed
+3. Use `sigma2i_core.py` as the reference path for small systems
+4. Use the Pfaffian script for overlap checks and moderate sizes
+5. Use the determinant script for larger scans and scaling studies
+
+---
+
+## Reproduce a representative result
+
+For the TFIM with open boundary conditions, the σ²_I peak lies below the critical point h_c = 1.0.
+
+To reproduce a representative result near the peak:
+
+- Use the determinant script
+- Set n = 14
+- Choose an h_range covering approximately [0.85, 1.05]
+
+---
+
+## Limitations
+
+- Exact diagonalisation is only practical for small systems
+- The large-system paths are model-specific (TFIM with OBC)
+- `from_state_vector(...)` requires a valid state vector of length 2^n
+- `demo_tfim(...)` returns a scan object, not a single-state result
+- Plotting requires matplotlib
+- Exploratory ranges should not be read as fully validated ranges
+
+---
 
 ## Citation
 
@@ -112,11 +262,12 @@ to verify.
   title   = {$\sigma^2_I$: A Second-Moment Functional of Pairwise
              Correlations as a Structural Observable in Finite
              Quantum Systems},
-  journal = {Physical Review Letters},
   year    = {2026},
-  note    = {Submitted}
+  note    = {Manuscript}
 }
 ```
+
+---
 
 ## License
 
