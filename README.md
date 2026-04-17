@@ -121,7 +121,7 @@ This will:
 - Run the built-in TFIM demo for n = 8
 - Scan over the transverse field
 - Print the peak location and summary statistics
-- Save a plot as `sigma2i_demo.png`
+- Save a plot as `sigma2i_core.png`
 
 ### 2. Run a determinant scan
 
