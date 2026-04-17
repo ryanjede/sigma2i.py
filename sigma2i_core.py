@@ -7,12 +7,12 @@ for quantum systems.
 
 Reference
 ---------
-Ede, R. (2026). σ²_I: A Second-Moment Functional of Pairwise Correlations
+Ede, R. J. (2026). σ²_I: A Second-Moment Functional of Pairwise Correlations
 as a Structural Observable in Finite Quantum Systems.
 
 Usage
 -----
-    import sigma2i
+    import sigma2i_core
     import numpy as np
 
     # From a density matrix (full system, shape 2^n x 2^n)
@@ -662,7 +662,7 @@ def demo_tfim(
 # ─────────────────────────────────────────────────────────────────────────────
 
 __version__ = "1.0.0"
-__author__ = "Ryan Ede"
+__author__ = "Ryan J. Ede"
 __email__ = "ryanjede@gmail.com"
 __license__ = "MIT"
 
