@@ -74,9 +74,17 @@ python3 tfim_jw_determinant_sigma2i_obc.py
 python3 tfim_jw_pfaffian_sigma2i_obc.py
 ```
 
-### Exact diagonalisation (n ≤ 18)
+### Exact diagonalisation (`n <= 18`)
 
-Run the built-in TFIM demo from Terminal:
+## Advanced usage
+
+These functions are for users who already have quantum-state data from another script, simulator, or experiment.
+
+- `from_state_vector(...)`: use this if you already have a pure-state wavefunction `psi`
+- `from_density_matrix(...)`: use this if you already have a full density matrix `rho`
+- `from_rdms(...)`: use this if you already have precomputed two-site reduced density matrices `rdms`
+
+If you are unsure what these objects are, skip this section and use the built-in TFIM demo instead:
 
 ```bash
 python3 sigma2i_core.py
