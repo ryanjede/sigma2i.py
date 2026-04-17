@@ -76,15 +76,10 @@ python3 tfim_jw_pfaffian_sigma2i_obc.py
 
 ### Exact diagonalisation (n ≤ 18)
 
-```python
-from sigma2i_core import from_state_vector, demo_tfim
+Run the built-in TFIM demo from Terminal:
 
-# Quick demo: TFIM n=8 scan
-result = demo_tfim(n=8)
-
-# From any state vector
-result = from_state_vector(psi, n_qubits=8)
-print(result.sigma2, result.mean_mi, result.contrast_ratio)
+```bash
+python3 sigma2i_core.py
 ```
 
 ### Reproduce a headline result
