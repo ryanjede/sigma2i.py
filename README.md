@@ -62,15 +62,14 @@ This was the first implementation used to reveal the finite-size regime structur
 Fast Jordan–Wigner / Bogoliubov free-fermion implementation using the tridiagonal eigenproblem and determinant-based correlator reconstruction.
 
 Includes:
-
-- Coarse-to-fine peak search
-- Variance decomposition (law of total variance)
+- command-line scan configuration
+- local-maximum reporting
+- quadratic peak refinement
 
 Best for:
-
-- Larger TFIM scans
-- Finite-size scaling studies
-- Mechanistic analysis of the crossover structure
+- larger TFIM scans
+- finite-size scaling studies
+- peak tracking across system sizes
 
 ---
 
@@ -287,4 +286,4 @@ To reproduce a representative result near the peak:
 
 ## License
 
-This repository is **not open source**. See [LICENSE](LICENSE.md) for the terms governing inspection, local execution, and other permitted uses.
+This repository is **not open source**. See [LICENSE](LICENSE) for the terms governing inspection, local execution, and other permitted uses.
