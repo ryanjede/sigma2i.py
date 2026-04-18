@@ -7,6 +7,6 @@ authors:
     given-names: "Ryan J."
 email: "ryanjede@gmail.com"
 repository-code: "https://github.com/ryanjede/sigma2i.py"
-license: "NOASSERTION"
+license-url: "https://github.com/ryanjede/sigma2i.py/blob/main/LICENSE.md"
 version: "0.2.0"
 date-released: 17-04-2026
