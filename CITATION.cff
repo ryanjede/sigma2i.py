@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "σ²_I: Structural Observable for Finite Quantum Systems"
+message: "If you use this repository, please cite it using the metadata below."
+type: software
+authors:
+  - family-names: "Ede"
+    given-names: "Ryan J."
+email: "ryanjede@gmail.com"
+repository-code: "https://github.com/ryanjede/sigma2i.py"
+license: "NOASSERTION"
+version: "0.2.0"
+date-released: 17-04-2026
