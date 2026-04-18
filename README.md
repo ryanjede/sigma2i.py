@@ -74,9 +74,36 @@ Includes:
 - quadratic peak refinement
 
 Best for:
-- larger TFIM scans
-- finite-size scaling studies
-- peak tracking across system sizes
+- Larger TFIM scans
+- Finite-size scaling studies
+- Peak tracking across system sizes
+
+### `examples/` — Runnable examples
+
+Small example scripts for local execution and quick inspection of outputs.
+
+Best for:
+- First-time users
+- Checking how to run the public code
+- Simple reproducibility demonstrations
+
+### `tests/` — Basic validation checks
+
+Minimal tests for core functionality and numerical sanity checks.
+
+Best for:
+- Confirming the public code runs correctly
+- Checking basic invariants and simple reference cases
+- Lightweight regression testing
+
+### `figures/` — Example outputs and reference visuals
+
+Saved plots and example output figures associated with the repository.
+
+Best for:
+- Inspecting representative outputs
+- Comparing runs visually
+- Supporting documentation and presentation
 
 ---
 
