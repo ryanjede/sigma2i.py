@@ -287,4 +287,4 @@ To reproduce a representative result near the peak:
 
 ## License
 
-
+This repository is **not open source**. See [LICENSE](LICENSE.md) for the terms governing inspection, local execution, and other permitted uses.
