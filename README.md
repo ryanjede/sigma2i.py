@@ -183,13 +183,37 @@ python3 tfim_jw_determinant_sigma2i_obc.py -n 50 --h-min 0.90 --h-max 1.05 --h-s
 
 ### 3. Run a Pfaffian scan
 
-For moderate-size validation and overlap checks:
+For moderate-size validation and overlap checks.
+
+Default run:
 
 ```bash
-# Edit N and h_range at the bottom of the script, then:
 python3 tfim_jw_pfaffian_sigma2i_obc.py
 ```
 
+Custom sizes:
+```bash
+python3 tfim_jw_pfaffian_sigma2i_obc.py -n 8 20 40 50 60
+```
+
+Custom scan window:
+```bash
+python3 tfim_jw_pfaffian_sigma2i_obc.py -n 50 --coarse-min 0.94 --coarse-max 1.00
+--coarse-steps 31 --fine-half-width 0.01 --fine-steps 61
+```
+
+Show all options:
+```bash
+python3 tfim_jw_pfaffian_sigma2i_obc.py -h
+```
+
+If you want the long custom command wrapped nicely, use:
+
+```bash
+python3 tfim_jw_pfaffian_sigma2i_obc.py -n 50 \
+  --coarse-min 0.94 --coarse-max 1.00 --coarse-steps 31 \
+  --fine-half-width 0.01 --fine-steps 61
+```
 ---
 
 ## Interactive demo
