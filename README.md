@@ -26,6 +26,13 @@ The intent is to provide:
 - Overlapping methods for cross-checking
 - A scalable route for finite-size studies
 
+See also:
+- [Methods overview](METHODS.md)
+- [Disclaimer](DISCLAIMER.md)
+- [License terms](LICENSE)
+- [Security policy](SECURITY.md)
+- [Contribution guidelines](CONTRIBUTING.md)
+
 ---
 
 ## Repository map
