@@ -25,7 +25,7 @@ for n <= 65; Pfaffian accuracy degrades for pair separations m > 70.
 import csv
 import time
 from itertools import combinations
-
+import argparse
 import numpy as np
 
 
@@ -401,52 +401,109 @@ def run_list(
 
     return rows
 
-
-# ====================== MAIN ======================
-
-def fit_scaling_fixed_nu(rows, n_min=30):
-    from scipy.optimize import curve_fit
-    filtered = [r for r in rows if r["n"] >= n_min]
-
-    ns = np.array([r["n"] for r in filtered], dtype=float)
-    hs = np.array([r["h_star_refined"] for r in filtered], dtype=float)
-
-    def scaling_fixed(n, hc, A):
-        return hc + A / n
-
-    popt, pcov = curve_fit(
-        scaling_fixed,
-        ns,
-        hs,
-        p0=[1.0, -1.0],
-        bounds=([0.9, -10.0], [1.1, 0.0]),
-        maxfev=50000,
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Jordan-Wigner / Pfaffian peak finder for sigma^2_I in the open TFIM."
+        )
     )
 
-    hc, A = popt
-    perr = np.sqrt(np.diag(pcov))
+    parser.add_argument(
+        "-n", "--n",
+        type=int,
+        nargs="+",
+        default=[8, 20, 40, 50, 60],
+        metavar="SYSTEM_SIZE",
+        help="One or more system sizes, e.g. -n 8 20 40 50 60"
+    )
 
-    print("\nScaling fit with 1/nu fixed to 1:")
-    print(f"  points used: n >= {n_min}")
-    print(f"  h_c = {hc:.6f} ± {perr[0]:.6f}")
-    print(f"  A   = {A:.6f} ± {perr[1]:.6f}")
+    parser.add_argument(
+        "--coarse-min",
+        type=float,
+        default=0.940,
+        metavar="FIELD_MIN",
+        help="Minimum field value for the coarse scan (default: 0.940)"
+    )
+    parser.add_argument(
+        "--coarse-max",
+        type=float,
+        default=1.000,
+        metavar="FIELD_MAX",
+        help="Maximum field value for the coarse scan (default: 1.000)"
+    )
+    parser.add_argument(
+        "--coarse-steps",
+        type=int,
+        default=31,
+        metavar="NUM_STEPS",
+        help="Number of coarse scan points (default: 31)"
+    )
 
-    return popt, pcov
+    parser.add_argument(
+        "--fine-half-width",
+        type=float,
+        default=0.010,
+        metavar="HALF_WIDTH",
+        help="Half-width of the fine scan window around the coarse maximum (default: 0.010)"
+    )
+    parser.add_argument(
+        "--fine-steps",
+        type=int,
+        default=61,
+        metavar="NUM_STEPS",
+        help="Number of fine scan points (default: 61)"
+    )
+
+    parser.add_argument(
+        "--csv",
+        type=str,
+        default="sigma2i_jw_peaks.csv",
+        metavar="PATH",
+        help="Output CSV path (default: sigma2i_jw_peaks.csv)"
+    )
+
+    parser.add_argument(
+        "--debug-dump-n",
+        type=int,
+        nargs="*",
+        default=[],
+        metavar="SYSTEM_SIZE",
+        help="System sizes for which coarse/fine scan values should be printed"
+    )
+
+    parser.add_argument(
+        "--fit-n-min",
+        type=int,
+        default=30,
+        metavar="NMIN",
+        help="Minimum n to include in the fixed-nu scaling fit (default: 30)"
+    )
+    parser.add_argument(
+        "--no-fit",
+        action="store_true",
+        help="Skip the fixed-nu scaling fit"
+    )
+
+    return parser.parse_args()
+
+# ====================== MAIN ======================
+def main() -> None:
+    args = parse_args()
+
+    results = run_list(
+        n_list=args.n,
+        coarse_min=args.coarse_min,
+        coarse_max=args.coarse_max,
+        coarse_steps=args.coarse_steps,
+        fine_half_width=args.fine_half_width,
+        fine_steps=args.fine_steps,
+        csv_path=args.csv,
+        debug_dump_n=set(args.debug_dump_n),
+    )
+
+    if (not args.no_fit) and len(results) >= 2:
+        fit_scaling_fixed_nu(results, n_min=args.fit_n_min)
 
 
 if __name__ == "__main__":
-    n_list = [8, 20, 40, 50, 60]
-
-    results = run_list(
-        n_list=n_list,
-        coarse_min=0.940,
-        coarse_max=1.0,
-        coarse_steps=31,
-        fine_half_width=0.010,
-        fine_steps=61,
-        csv_path="sigma2i_jw_peaks.csv",
-        debug_dump_n=set(),   # example: {24, 26}
-    )
-
-    if len(results) >= 2:
-        fit_scaling_fixed_nu(results, n_min=30)
+    main()
