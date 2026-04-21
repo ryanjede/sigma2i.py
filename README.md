@@ -6,6 +6,8 @@ Reproducible Python implementation of **σ²_I**, a basis-invariant, partition-f
 
 The variance of pairwise mutual information over all subsystem pairs. The observable detects **where correlations live**, not merely **how much** correlation exists.
 
+![Graphical abstract](graphical_abstract.png)
+
 This repository accompanies:
 
 > R. J. Ede, "σ²_I: A Second-Moment Functional of Pairwise Correlations as a Structural Observable in Finite Quantum Systems" (2026 manuscript).
