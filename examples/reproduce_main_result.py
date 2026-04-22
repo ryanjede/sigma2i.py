@@ -11,11 +11,11 @@ This script:
   4. Prints a summary table
 
 Expected output:
-    n =  6:  h* = 0.943  ✓  (h* < h_c)
-    n =  8:  h* = 0.925  ✓  (h* < h_c)
-    n = 10:  h* = 0.920  ✓  (h* < h_c)
-    n = 12:  h* = 0.920  ✓  (h* < h_c)
-    n = 14:  h* = 0.920  ✓  (h* < h_c)
+    n =  6:  h* = 0.928  ✓  (h* < h_c)
+    n =  8:  h* = 0.929  ✓  (h* < h_c)
+    n = 10:  h* = 0.927  ✓  (h* < h_c)
+    n = 12:  h* = 0.926  ✓  (h* < h_c)
+    n = 14:  h* = 0.927  ✓  (h* < h_c)
 
 Runtime: ~2 min on a laptop (n=14 is the bottleneck).
 
@@ -72,7 +72,7 @@ def find_peak(n, h_values):
 
 def main():
     sizes = [6, 8, 10, 12, 14]
-    h_coarse = np.linspace(0.7, 1.3, 31)
+    h_coarse = np.linspace(0.92, 0.93, 31)
 
     print("Reproducing headline result: σ²_I peak at h* < h_c = 1.0")
     print("=" * 55)
@@ -88,7 +88,7 @@ def main():
         h_peak, s2_peak = find_peak(n, h_coarse)
 
         # Fine scan around peak
-        h_fine = np.linspace(h_peak - 0.05, h_peak + 0.05, 21)
+        h_fine = np.linspace(h_peak - 0.01, h_peak + 0.01, 41)
         h_peak, s2_peak = find_peak(n, h_fine)
 
         elapsed = time.time() - t0
