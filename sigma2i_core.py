@@ -1,36 +1,36 @@
 #!/usr/bin/env python3
 """
-sigma2i_core.py
+sigma2i.py
 
 σ²_I: Variance of pairwise mutual information as a structural observable
 for quantum systems.
 
 Reference
 ---------
-Ede, R. J. (2026). σ²_I: A Second-Moment Functional of Pairwise Correlations
-as a Structural Observable in Finite Quantum Systems.
+Ede, R. (2026). σ²_I: A Second-Moment Functional of Pairwise Correlations
+as a Structural Observable in Finite Quantum Systems. Working Paper v23.
 
 Usage
 -----
-    import sigma2i_core
+    import sigma2i
     import numpy as np
 
     # From a density matrix (full system, shape 2^n x 2^n)
     rho = ...
-    result = sigma2i_core.from_density_matrix(rho, n_qubits=8)
+    result = sigma2i.from_density_matrix(rho, n_qubits=8)
     print(result.sigma2, result.mean_mi, result.hot_pairs)
 
     # From a state vector (shape 2^n)
     psi = ...
-    result = sigma2i_core.from_state_vector(psi, n_qubits=8)
+    result = sigma2i.from_state_vector(psi, n_qubits=8)
 
     # From tomography data (list of 2-qubit reduced density matrices)
     # rdms[(i,j)] = 4x4 density matrix for qubits i<j
-    result = sigma2i_core.from_rdms(rdms, n_qubits=8)
+    result = sigma2i.from_rdms(rdms, n_qubits=8)
 
     # Scan over a Hamiltonian parameter (e.g. transverse field)
     h_values = np.linspace(0.3, 1.8, 50)
-    scan = sigma2i_core.scan(hamiltonian_fn, h_values, n_qubits=8)
+    scan = sigma2i.scan(hamiltonian_fn, h_values, n_qubits=8)
     scan.plot()
 
 Requirements
@@ -44,7 +44,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Callable, Dict, List, Optional, Tuple
-
+import argparse
 import numpy as np
 
 
@@ -591,7 +591,7 @@ def _tfim_ground_state(n: int, h: float, bc: str = "open") -> np.ndarray:
 
 
 def demo_tfim(
-    n: int = 8,
+    n: int = 6,
     h_range: Tuple[float, float] = (0.3, 1.8),
     n_points: int = 50,
     bc: str = "open",
@@ -610,6 +610,10 @@ def demo_tfim(
 
     result = scan(gs, params, n_qubits=n, input_type="state_vector", verbose=False)
 
+    h_star = float(result.peak_param)
+    hc = 1.0
+    delta_hc = abs(h_star - hc)
+
     print("\nResults:")
     print(f"  σ²_I peak:    h* = {result.peak_param:.3f}")
     print(f"  Mean MI peak: h  = {result.params[np.argmax(result.mean_mi)]:.3f}")
@@ -621,6 +625,7 @@ def demo_tfim(
     print(f"  Contrast ratio (hot/cold) = {r.contrast_ratio:.2f}x")
     print(f"  Hottest pairs: {r.hot_pairs[:3]}")
     print(f"  Coldest pairs: {r.cold_pairs[:3]}")
+    print(f"  Δh = |h* - h_c| = {delta_hc:.3f}")
 
     if plot:
         try:
@@ -662,9 +667,9 @@ def demo_tfim(
 # ─────────────────────────────────────────────────────────────────────────────
 
 __version__ = "1.0.0"
-__author__ = "Ryan J. Ede"
+__author__ = "Ryan Jade Ede"
 __email__ = "ryanjede@gmail.com"
-__license__ = "MIT"
+__license__ = "PRIVATE"
 
 __all__ = [
     "from_state_vector",
@@ -677,8 +682,28 @@ __all__ = [
     "ScanResult",
 ]
 
+def parse_args():
+    p = argparse.ArgumentParser(description="Run sigma2i TFIM demo scan.")
+    p.add_argument("--n", type=int, default=8, help="System size")
+    p.add_argument("--bc", type=str, choices=["open", "periodic"], default="open",
+                   help="Boundary condition")
+    p.add_argument("--h-min", type=float, default=0.3, help="Start of h range")
+    p.add_argument("--h-max", type=float, default=1.8, help="End of h range")
+    p.add_argument("--points", type=int, default=501, help="Number of scan points")
+    p.add_argument("--plot", action="store_true", help="Save plot")
+    p.add_argument("--no-plot", dest="plot", action="store_false", help="Do not save plot")
+    p.set_defaults(plot=True)
+    return p.parse_args()
 
 if __name__ == "__main__":
+    args = parse_args()
+
     print(f"sigma2i v{__version__}")
-    print("Running TFIM demo (n=8)...")
-    demo_tfim(n=8, h_range=(0.3, 2.0), n_points=150, plot=True)
+
+    demo_tfim(
+        n=args.n,
+        h_range=(args.h_min, args.h_max),
+        n_points=args.points,
+        bc=args.bc,
+        plot=args.plot,
+    )
