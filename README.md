@@ -6,7 +6,7 @@ Reproducible Python implementation of **σ²_I**, a basis-invariant, partition-f
 
 The variance of pairwise mutual information over all subsystem pairs. The observable detects **where correlations live**, not merely **how much** correlation exists.
 
-![Graphical abstract](graphical_abstract.png)
+![Values shown are produced directly by the sigma2i scan on the specified h-grid. Peak locations therefore depend on scan range and grid spacing, and may shift slightly under finer resolution.](graphical_abstract.png)
 
 This repository accompanies:
 
