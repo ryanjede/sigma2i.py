@@ -157,7 +157,7 @@ By default this will:
 * Use open boundary conditions
 * Scan h/J from 0.3 to 1.8
 * Use 501 scan points
-* Save a plot as sigma2i_core.png
+* Save a plot as `sigma2i_core.png`
 
 You can also customise the run from the command line:
 
@@ -171,28 +171,7 @@ Example: periodic boundary conditions
 python3 sigma2i_core.py --n 8 --bc periodic --h-min 0.9 --h-max 1.4 --points 501 --no-plot
 ```
 
-### 2. Run a determinant scan
-
-Without any flags, the script runs with its default settings:
-
-```bash
-python3 tfim_jw_determinant_sigma2i_obc.py
-```
-
-Default settings:
-
-* n = 50
-* h-min = 0.90
-* h-max = 1.05
-* h-step = 0.001
-* log-base = 2
-
-Example scan
-```bash
-python3 tfim_jw_determinant_sigma2i_obc.py -n 50 --h-min 0.90 --h-max 1.05 --h-step 0.001
-```
-
-### 3. Run a Pfaffian scan
+### 2. Run a Pfaffian scan
 
 For moderate-size validation and overlap checks.
 
@@ -219,6 +198,27 @@ Custom scan window:
 ```bash
 python3 tfim_jw_pfaffian_sigma2i_obc.py -n 50 --coarse-min 0.94 --coarse-max 1.00
 --coarse-steps 31 --fine-half-width 0.01 --fine-steps 61
+```
+
+### 3. Run a determinant scan
+
+Without any flags, the script runs with its default settings:
+
+```bash
+python3 tfim_jw_determinant_sigma2i_obc.py
+```
+
+Default settings:
+
+* n = 50
+* h-min = 0.90
+* h-max = 1.05
+* h-step = 0.001
+* log-base = 2
+
+Example scan
+```bash
+python3 tfim_jw_determinant_sigma2i_obc.py -n 50 --h-min 0.90 --h-max 1.05 --h-step 0.001
 ```
 
 ---
