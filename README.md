@@ -150,12 +150,26 @@ The easiest way to confirm the code is working:
 python3 sigma2i_core.py
 ```
 
-This will:
+By default this will:
 
-- Run the built-in TFIM demo for n = 8
-- Scan over the transverse field
-- Print the peak location and summary statistics
-- Save a plot as `sigma2i_core.png`
+* Run the built-in TFIM demo
+* Use n = 8
+* Use open boundary conditions
+* Scan h/J from 0.3 to 1.8
+* Use 501 scan points
+* Save a plot as sigma2i_core.png
+
+You can also customise the run from the command line:
+
+```bash
+python3 sigma2i_core.py --n 8 --bc open --h-min 0.3 --h-max 1.8 --points 501 --plot
+```
+
+Example: periodic boundary conditions
+
+```bash
+python3 sigma2i_core.py --n 8 --bc periodic --h-min 0.9 --h-max 1.4 --points 501 --no-plot
+```
 
 ### 2. Run a determinant scan
 
@@ -173,11 +187,6 @@ Default settings:
 * h-step = 0.001
 * log-base = 2
 
-Show available command-line options
-```bash
-python3 tfim_jw_determinant_sigma2i_obc.py -h
-```
-
 Example scan
 ```bash
 python3 tfim_jw_determinant_sigma2i_obc.py -n 50 --h-min 0.90 --h-max 1.05 --h-step 0.001
@@ -192,6 +201,14 @@ Default run:
 ```bash
 python3 tfim_jw_pfaffian_sigma2i_obc.py
 ```
+Default settings:
+
+* n = 8, 20, 40, 50, 60
+* h-min = 0.940
+* h-max = 1.000
+* coarse-step = 31
+* fine-width = 0.010
+* fine-step = 61
 
 Custom sizes:
 ```bash
@@ -204,18 +221,6 @@ python3 tfim_jw_pfaffian_sigma2i_obc.py -n 50 --coarse-min 0.94 --coarse-max 1.0
 --coarse-steps 31 --fine-half-width 0.01 --fine-steps 61
 ```
 
-Show all options:
-```bash
-python3 tfim_jw_pfaffian_sigma2i_obc.py -h
-```
-
-If you want the long custom command wrapped nicely, use:
-
-```bash
-python3 tfim_jw_pfaffian_sigma2i_obc.py -n 50 \
-  --coarse-min 0.94 --coarse-max 1.00 --coarse-steps 31 \
-  --fine-half-width 0.01 --fine-steps 61
-```
 ---
 
 ## Interactive demo
