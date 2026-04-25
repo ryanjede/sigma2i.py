@@ -689,7 +689,7 @@ def parse_args():
                    help="Boundary condition")
     p.add_argument("--h-min", type=float, default=0.3, help="Start of h range")
     p.add_argument("--h-max", type=float, default=1.8, help="End of h range")
-    p.add_argument("--points", type=int, default=501, help="Number of scan points")
+    p.add_argument("--points", type=int, default=1501, help="Number of scan points")
     p.add_argument("--plot", action="store_true", help="Save plot")
     p.add_argument("--no-plot", dest="plot", action="store_false", help="Do not save plot")
     p.set_defaults(plot=True)
